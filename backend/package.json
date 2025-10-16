@@ -1,0 +1,21 @@
+{
+  "name": "school-booking-backend",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "nodemon --exec npx ts-node src/server.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.42.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
