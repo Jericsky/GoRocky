@@ -1,7 +1,19 @@
-import { Router } from 'express';
-const router = Router();
+import express from 'express'
+import { supabase } from '../../supabaseClient';
+const router = express.Router();
 
-// Define your routes here
-// router.get('/', ...);
+// Create a new profile
+router.post('/', async (req, res) => {
+    const { id, name, email, role } = req.body;
+
+    try {
+        
+    } catch (error) {
+        
+    }
+})
+
+
+
 
 export default router;

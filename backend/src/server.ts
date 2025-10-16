@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { supabase } from './supabaseClient';
+import authRoutes from './routes/auth/routes';
 import courseRoutes from './routes/courses/routes';
 import enrollmentRoutes from './routes/enrollments/routes';
 import profileRoutes from './routes/profile/routes';
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 // Use the imported routes
+app.use('/auth', authRoutes);
 app.use('/courses', courseRoutes);
 app.use('/enrollments', enrollmentRoutes);
 app.use('/profile', profileRoutes);
