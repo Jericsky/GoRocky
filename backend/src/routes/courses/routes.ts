@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { supabase } from '../../supabaseClient';
+import { protectedRoute } from '../../middleware/protectedRoute';
 const router = Router();
 
 // Create Course
-router.post('/', async (req, res) => {
+router.post('/', protectedRoute, async (req, res) => {
     const { title, description, instructor_id } = req.body;
 
     try {
