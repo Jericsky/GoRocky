@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get Course by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', protectedRoute, async (req, res) => {
     try {
         const { id } = req.params;
         const { data, error } = await supabase
@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update Course
-router.put('/:id', async (req, res) => {
+router.put('/:id', protectedRoute, async (req, res) => {
     const { id } = req.params;
     const { title, description } = req.body;
 
@@ -100,7 +100,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete Course
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protectedRoute, async (req, res) => {
     const { id } = req.params;
 
     try {
