@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { supabase } from './supabaseClient';
 import authRoutes from './routes/auth/routes';
 import courseRoutes from './routes/courses/routes';
@@ -13,6 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Use the imported routes
 app.use('/auth', authRoutes);

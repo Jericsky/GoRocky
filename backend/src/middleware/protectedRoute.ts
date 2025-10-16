@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     email: string;
@@ -10,30 +10,26 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const protectedRoute = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Authorization header missing' });
-  }
-
-  const token = authHeader.split(' ')[1]; // Assuming Bearer token
-
-  if (!token) {
-    return res.status(401).json({ error: 'Token missing' });
-  }
-
   try {
-    const secret = process.env.JWT_SECRET || 'your_jwt_secret'; // Use environment variable for secret
-    const decoded = jwt.verify(token, secret) as { id: string; email: string; role: string };
+        const token = req.cookies?.jwt;
+        console.log("Token from cookies:", token);
+        if (!token) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
 
-    req.user = {
-      id: decoded.id,
-      email: decoded.email,
-      role: decoded.role,
-    };
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            throw new Error('JWT_SECRET is not defined');
+        }
 
-    next();
-  } catch (error) {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-};
+        const decoded = jwt.verify(token, secret) as { userId: string };
+        req.user = { id: decoded.userId, email: '', role: '' }; // Email and role can be fetched from DB if needed
+
+        next(); 
+    } catch (error) {
+        console.log('Error in protectRoute middleware: ', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export default protectedRoute;

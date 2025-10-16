@@ -128,6 +128,4 @@ router.delete('/:id', protectedRoute, async (req, res) => {
 });
 
 
-
-
 export default router;
