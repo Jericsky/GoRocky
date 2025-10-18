@@ -47,5 +47,90 @@ router.post('/', protectedRoute, async (req, res) => {
     }
 });
 
+// Get enrollments for a student
+router.get('/student/:student_id', protectedRoute, async (req, res) => {
+    try {
+        const { student_id } = req.params;
+
+        const { data: enrollments, error } = await supabase
+            .from('enrollments')
+            .select('*, courses( title, description ), profiles( full_name )')
+            .eq('student_id', student_id);
+            
+        if (error) {
+            console.error("Error fetching enrollments:", error);
+            return res.status(400).json({ error: error.message });
+        }   
+
+        res.status(200).json({ enrollments });
+    } catch (error) {
+        console.error("Error fetching enrollments:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Get all enrollments
+router.get('/', protectedRoute,  async (req, res) => {
+    try {
+        const { data: enrollments, error } = await supabase
+            .from('enrollments')
+            .select('*, courses( title ), profiles( full_name )');
+
+        if (error) {
+            console.error("Error fetching enrollments:", error);
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.status(200).json({ enrollments });
+    } catch (error) {
+        console.error("Error fetching enrollments:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Get enrollment by Course ID 
+router.get('/course/:course_id', protectedRoute, async (req, res) => {
+    try {
+        const { course_id } = req.params;
+
+        const { data: enrollments, error } = await supabase
+            .from('enrollments')
+            .select('*, profiles( full_name )')
+            .eq('course_id', course_id);
+
+        if (error) {
+            console.error("Error fetching enrollments by course ID:", error);
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.status(200).json({ enrollments });
+    } catch (error) {
+        console.error("Error fetching enrollments by course ID:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Delete an enrollment
+router.delete('/:id', protectedRoute, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('enrollments')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error("Error deleting enrollment:", error);
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.status(200).json({ message: "Enrollment deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting enrollment:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 
 export default router;

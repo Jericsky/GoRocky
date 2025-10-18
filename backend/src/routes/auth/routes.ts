@@ -113,6 +113,7 @@ router.post("/logout", async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) return res.status(400).json({ error: error.message });
+    
     res.cookie('jwt', '', { maxAge: 0 }); // Clear the cookie
 
     res.status(200).json({ message: "Logout successful!" });
