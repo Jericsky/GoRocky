@@ -24,7 +24,8 @@ export const generateToken = (userId: unknown, res: Response) => {
     // Set token in HTTP-only cookie
     res.cookie('jwt', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development', 
+        // secure: process.env.NODE_ENV !== 'development', // local
+        secure: true, // production
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
