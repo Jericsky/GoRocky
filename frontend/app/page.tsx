@@ -1,12 +1,17 @@
-export default function Home() {
+import NavBar from "@/components/NavBar";
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-base-200 flex flex-col items-center justify-center gap-6">
-      <h1 className="text-3xl font-bold underline">Tailwind + DaisyUI Test</h1>
-      <button className="btn btn-neutral">Neutral</button>
-      <button className="btn btn-primary">Primary</button>
-      <button className="btn btn-accent">Accent</button>
-      
-      <input type="text" placeholder="neutral" className="input input-neutral" />
-    </main>
+    <>
+      <NavBar />
+      <main className="flex flex-col items-center justify-center min-h-screen p-8 pt-24">
+        <h1 className="text-4xl font-bold text-primary mb-4">
+          School Course Booking
+        </h1>
+        <p className="text-lg text-gray-600 text-center max-w-md">
+          Browse and enroll in your favorite courses!
+        </p>
+      </main>
+    </>
   );
 }
