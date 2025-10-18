@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use('/courses', courseRoutes);
 app.use('/enrollments', enrollmentRoutes);
-app.use('/profile', profileRoutes);
+app.use('/profiles', profileRoutes);
 app.use('/sessions', sessionRoutes);
 
 app.get('/', (req, res) => {
