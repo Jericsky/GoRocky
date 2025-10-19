@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Loading from "@/components/Loading";
-import { Profile } from "@/types/profile";
+import { Profile } from "@/types/types";
 import toast from "react-hot-toast";
 
 export default function ProfilePage() {
@@ -76,16 +76,16 @@ export default function ProfilePage() {
         if (existingProfile) {
             // Update existing profile
             response = await supabase
-            .from("profiles")
-            .update({ full_name: fullName })
-            .eq("id", profile.id)
-            .select(); // no `.single()` here
+                .from("profiles")
+                .update({ full_name: fullName })
+                .eq("id", profile.id)
+                .select(); 
         } else {
             // Insert new profile if it doesn’t exist
             response = await supabase
-            .from("profiles")
-            .insert([{ id: profile.id, full_name: fullName }])
-            .select();
+                .from("profiles")
+                .insert([{ id: profile.id, full_name: fullName }])
+                .select();
         }
 
         const { data, error } = response;
@@ -102,12 +102,8 @@ export default function ProfilePage() {
 
     // Loading screen
     if (isLoading || !profile) {
-        return (
-        <div className="flex justify-center items-center min-h-screen bg-base-200">
-            <Loading />
-        </div>
-        );
-    }
+        return <Loading />;
+    };
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-base-200 px-4">
