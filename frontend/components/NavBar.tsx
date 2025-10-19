@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { set } from "mongoose";
 import toast from "react-hot-toast";
 
 export default function NavBar() {
