@@ -54,6 +54,8 @@ export default function CoursePage() {
                 .eq("id", id)
                 .single();
 
+              console.log("Fetched course data:", courseData, "Error:", courseError);
+
             if (courseError) {
                 console.error("Error fetching course:", courseError);
                 toast.error("Error fetching course data");
@@ -91,7 +93,47 @@ export default function CoursePage() {
         }
     }
 
-    return (
+    const handleEnroll = async () => {
+      if (!user || !profile) return;
+
+      // Check if student already enrolled
+      const { data: existing, error: checkError } = await supabase
+          .from("enrollments")
+          .select("*")
+          .eq("course_id", course.id)
+          .eq("student_id", user.id)
+          .eq("instructor_id", course.instructor_id)
+          .single();
+
+        if (checkError && checkError.code !== "PGRST116") {
+          console.error("Error checking enrollment:", checkError);
+          toast.error("Failed to enroll. Try again.");
+          return;
+        }
+
+        if (existing) {
+          toast("You are already enrolled in this course.");
+          return;
+        }
+
+        // Insert enrollment
+        const { error: enrollError } = await supabase
+          .from("enrollments")
+          .insert({
+            course_id: course.id,
+            student_id: user.id,
+            instructor_id: course.instructor_id
+          });
+
+        if (enrollError) {
+          console.error("Error enrolling:", enrollError);
+          toast.error("Failed to enroll. Try again.");
+        } else {
+          toast.success("Enrolled successfully!");
+        }
+    }
+
+  return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center pt-24 pb-16 px-4 ">
       {/* Hero Header */}
       <div className="w-full max-w-5xl text-center mb-10">
@@ -140,8 +182,11 @@ export default function CoursePage() {
                 </div>
               ) : (
                 studentCanEnroll && (
-                    <button className="btn btn-primary px-8 py-2 rounded-xl text-white text-lg shadow-md hover:scale-105 transition-transform duration-200">
-                        Enroll Now
+                    <button 
+                      className="btn btn-primary px-8 py-2 rounded-xl text-white text-lg shadow-md hover:scale-105 transition-transform duration-200"
+                      onClick={handleEnroll}
+                    >
+                      Enroll Now
                     </button>
                 )
               )}

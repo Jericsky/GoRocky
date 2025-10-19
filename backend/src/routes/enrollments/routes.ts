@@ -88,6 +88,42 @@ router.get('/', protectedRoute,  async (req, res) => {
     }
 });
 
+// Get all intructor enrollments
+router.get('/instructor/:instructor_id', protectedRoute, async (req, res) => {
+    try {
+        const { instructor_id } = req.params;
+
+        // Fetch courses by this instructor
+        const { data: coursesData, error: coursesError } = await supabase
+            .from('courses')
+            .select('id')
+            .eq('instructor_id', instructor_id);
+
+        if (coursesError) {
+            console.error("Error fetching courses:", coursesError);
+            return res.status(400).json({ error: coursesError.message });
+        }
+
+        const courseIds = coursesData?.map(c => c.id) || [];
+
+        // Fetch enrollments for these courses
+        const { data: enrollments, error: enrollmentsError } = await supabase
+            .from('enrollments')
+            .select('*, profiles( full_name ), courses( title )')
+            .in('course_id', courseIds);
+
+        if (enrollmentsError) {
+            console.error("Error fetching enrollments:", enrollmentsError);
+            return res.status(400).json({ error: enrollmentsError.message });
+        }
+
+        res.status(200).json({ enrollments });
+    } catch (error) {
+        console.error("Error fetching instructor enrollments:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 // Get enrollment by Course ID 
 router.get('/course/:course_id', protectedRoute, async (req, res) => {
     try {

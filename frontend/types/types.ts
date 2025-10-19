@@ -22,6 +22,9 @@ export type Enrollment = {
   course_id: string
   student_id: string
   enrolled_at: string
+
+  courses?: Course
+  profiles?: Profile
 }
 
 export type User = {
