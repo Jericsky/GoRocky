@@ -1,4 +1,5 @@
 -- USERS (Handled by Supabase Auth)
+-- Additional profile info
 create table profiles (
   id uuid references auth.users(id) on delete cascade primary key,
   full_name text,
@@ -6,6 +7,7 @@ create table profiles (
   created_at timestamp default now()
 );
 
+-- COURSES
 create table courses (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -14,6 +16,7 @@ create table courses (
   created_at timestamp default now()
 );
 
+-- ENROLLMENTS
 create table enrollments (
   id uuid primary key default gen_random_uuid(),
   course_id uuid references courses(id) on delete cascade,
@@ -22,10 +25,12 @@ create table enrollments (
   unique(course_id, student_id)
 );
 
+-- Enable Row Level Security
 alter table profiles enable row level security;
 alter table courses enable row level security;
 alter table enrollments enable row level security;
 
+-- Simple policies
 create policy "Users can view own profile" 
   on profiles for select
   using (auth.uid() = id);
